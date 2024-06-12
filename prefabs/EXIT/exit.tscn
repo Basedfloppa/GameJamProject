@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dd64mjk66s0vj"]
+
+[ext_resource type="Texture2D" uid="uid://8habq30xxmma" path="res://prefabs/EXIT/Sprite-0001.jpeg" id="1_1ett7"]
+
+[node name="EXIT" type="Node2D"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_1ett7")

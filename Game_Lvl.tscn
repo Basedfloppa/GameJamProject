@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://onr2paty5pw1"]
+
+[ext_resource type="Script" path="res://Game_Lvl.gd" id="1_2vobo"]
+[ext_resource type="Script" path="res://Camera2D.gd" id="2_q0ru7"]
+
+[node name="GameLvl" type="Node2D"]
+script = ExtResource("1_2vobo")
+size = Vector2(10, 5)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("2_q0ru7")
