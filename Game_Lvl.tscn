@@ -5,7 +5,12 @@
 
 [node name="GameLvl" type="Node2D"]
 script = ExtResource("1_2vobo")
-size = Vector2(10, 5)
+size = Vector2(10, 10)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
 script = ExtResource("2_q0ru7")
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="Lvls" type="Node2D" parent="."]

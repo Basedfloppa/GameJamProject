@@ -3,10 +3,13 @@ extends Node2D
 @export var size : Vector2
 
 @onready var tilemap = Map.new(size)
+@onready var sprites = $Sprites
+@onready var lvls = $Lvls
 
 func _ready():
-	fill_grid()
-	fill2()
+	fill_grid_background()
+	tilemap.generate()
+	fill_grid_lvl()
 
 func _process(_delta):
 	pass
@@ -18,7 +21,7 @@ func _draw():
 	for i in size.y + 1:
 		draw_line(Vector2(0, 1 + (i * 100)), Vector2(size.x * 100, 1 + (i * 100)), Color.GREEN, 1.0)
 
-func fill_grid():
+func fill_grid_background():
 	for i in size.x:
 		for j in size.y:
 			var sprite = Sprite2D.new()
@@ -28,43 +31,15 @@ func fill_grid():
 			if sprite.scale * sprite.texture.get_size() != Vector2(100,100):
 				sprite.scale = Vector2(99.0 / sprite.texture.get_size().x ,99.0 / sprite.texture.get_size().y)
 			
-			add_child(sprite)
+			sprites.add_child(sprite)
 
-func fill2():
-	var rng = RandomNumberGenerator.new()
-	
-	for i in LevelBase.Requiered:
-		match(i.tileType):
-			Utils.TileType.Exit:
-				var num = rng.randi_range(1,size.x-1)
-				var path = i.path.pick_random()
+func fill_grid_lvl():
+	for x in size.x:
+		for y in size.y:
+			if tilemap.map[x][y] != null:
+				var a = tilemap.map[x][y]
+				var path = tilemap.map[x][y].path.pick_random()
 				var scene = load(path).instantiate()
-				scene.position = Vector2(num * 100, 0)
-				add_child(scene)
-				tilemap.map[num][0].append(i)
-			Utils.TileType.Special:
-				while true:
-					var num_x = rng.randi_range(1,size.x-2)
-					var num_y = rng.randi_range(1,size.y-2)
-					
-					print(tilemap.map[num_x][num_y])
-					if tilemap.map[num_x][num_y] != []: continue
-					if tilemap.map[num_x+1][num_y+1] != []: continue
-					if tilemap.map[num_x+1][num_y] != []: continue
-					if tilemap.map[num_x][num_y+1] != []: continue
-					if tilemap.map[num_x-1][num_y-1] != []: continue
-					if tilemap.map[num_x-1][num_y] != []: continue
-					if tilemap.map[num_x][num_y-1] != []: continue
-					if tilemap.map[num_x-1][num_y+1] != []: continue
-					if tilemap.map[num_x+1][num_y-1] != []: continue
-					
-					var path = i.path.pick_random()
-					var scene = load(path).instantiate()
-					scene.position = Vector2(num_x * 100, num_y * 100)
-					add_child(scene)
-					tilemap.map[num_x][num_y].append(i)
-					break
-			Utils.TileType.Hazard:
-				pass
-			Utils.TileType.Passage:
-				pass
+				
+				scene.position = Vector2(1 + x*100, 1+ y*100)
+				lvls.add_child(scene)
