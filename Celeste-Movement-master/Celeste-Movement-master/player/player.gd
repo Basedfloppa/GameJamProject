@@ -5,17 +5,17 @@ const LIMIT_SPEED_X = 18000
 const LIMIT_SPEED_Y = 1200
 const JUMP_HEIGHT = 36000
 const MIN_JUMP_HEIGHT = 12000
-const MAX_COYOTE_TIME = 6 #amount of frames
-const JUMP_BUFFER_TIME = 10 #amount of frames
+const MAX_COYOTE_TIME = 0.1 #amount of seconds
+const JUMP_BUFFER_TIME = 0.17 #amount of seconds
 const WALL_JUMP_AMOUNT = 18000
-const WALL_JUMP_TIME = 10 #amount of frames
+const WALL_JUMP_TIME = 0.17 #amount of seconds
 const WALL_SLIDE_FACTOR = 0.8
 const GRAVITY = 2100
 const DASH_SPEED = 36000
 
 var axis: Vector2
 
-var coyoteTimer = 0
+var coyoteTimer: float = 0.0
 var jumpBufferTimer = 0
 var wallJumpTimer = 0
 var dashTime = 0
@@ -37,7 +37,7 @@ func _physics_process(delta):
 	axis = Input.get_vector("ui_left", "ui_right","ui_up","ui_down")
 
 	if !isDashing && velocity.y <= LIMIT_SPEED_Y: velocity.y += GRAVITY * delta
-	
+
 	#basic movement mechanics and coyote time
 	if is_on_floor():
 		hasDashed = false
@@ -46,11 +46,10 @@ func _physics_process(delta):
 		friction = false
 		canJump = true
 
-		coyoteTimer = 0
+		coyoteTimer = 0.0
 	else:
 		friction = true
-		coyoteTimer += 1
-
+		coyoteTimer += delta
 		if coyoteTimer >= MAX_COYOTE_TIME:
 			canJump = false
 			coyoteTimer = 0
@@ -63,7 +62,7 @@ func _physics_process(delta):
 		if !isDashing && !isGrabbing:
 			horizontalMovement(delta)
 	else:
-		wallJumpTimer += 1
+		wallJumpTimer += delta
 	
 	if !canJump:
 		wallSlide(delta)
@@ -89,7 +88,7 @@ func _physics_process(delta):
 			velocity.y = -MIN_JUMP_HEIGHT * delta
 
 	if jumpBufferTimer > 0:
-		jumpBufferTimer -= 1
+		jumpBufferTimer -= delta
 		if is_on_floor(): jump(delta)
 	
 	move_and_slide()
@@ -143,7 +142,9 @@ func dash(delta):
 		if Input.is_action_just_pressed("dash"):
 			velocity = axis * DASH_SPEED * delta
 			spriteColor = "blue"
+
 			Input.start_joy_vibration(0, 1, 1, 0.2)
+
 			isDashing = true
 			hasDashed = true
 	
