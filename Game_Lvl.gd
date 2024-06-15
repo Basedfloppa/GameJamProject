@@ -1,5 +1,7 @@
 extends Node2D
 
+const TILE_SIZE = 500
+
 @export var size : Vector2
 
 @onready var tilemap = Map.new(size)
@@ -14,22 +16,22 @@ func _ready():
 func _process(_delta):
 	pass
 
-func _draw():
-	for i in size.x + 1:
-		draw_line(Vector2(1 + (i * 100), 0), Vector2(1 + (i * 100), size.y * 100), Color.GREEN, 1.0)
-	
-	for i in size.y + 1:
-		draw_line(Vector2(0, 1 + (i * 100)), Vector2(size.x * 100, 1 + (i * 100)), Color.GREEN, 1.0)
+#func _draw():
+	#for i in size.x + 1:
+		#draw_line(Vector2(1 + (i * TILE_SIZE), 0), Vector2(1 + (i * TILE_SIZE), size.y * TILE_SIZE), Color.GREEN, 1.0)
+	#
+	#for i in size.y + 1:
+		#draw_line(Vector2(0, 1 + (i * TILE_SIZE)), Vector2(size.x * TILE_SIZE, 1 + (i * TILE_SIZE)), Color.GREEN, 1.0)
 
 func fill_grid_background():
 	for i in size.x:
 		for j in size.y:
 			var sprite = Sprite2D.new()
 			
-			sprite.position = Vector2(51 + i * 100, 51 + j * 100)
+			sprite.position = Vector2(1 + (TILE_SIZE/2) + (i * TILE_SIZE), 1 + (TILE_SIZE/2) + (j * TILE_SIZE))
 			sprite.texture = load("res://icon.svg")
-			if sprite.scale * sprite.texture.get_size() != Vector2(100,100):
-				sprite.scale = Vector2(99.0 / sprite.texture.get_size().x ,99.0 / sprite.texture.get_size().y)
+			if sprite.scale * sprite.texture.get_size() != Vector2(TILE_SIZE,TILE_SIZE):
+				sprite.scale = Vector2((TILE_SIZE - 1) / sprite.texture.get_size().x ,(TILE_SIZE - 1) / sprite.texture.get_size().y)
 			
 			sprites.add_child(sprite)
 
@@ -41,5 +43,5 @@ func fill_grid_lvl():
 				var path = tilemap.map[x][y].path.pick_random()
 				var scene = load(path).instantiate()
 				
-				scene.position = Vector2(1 + x*100, 1+ y*100)
+				scene.position = Vector2(1 + x * TILE_SIZE, 1 + y * TILE_SIZE)
 				lvls.add_child(scene)

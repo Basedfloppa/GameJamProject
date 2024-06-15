@@ -1,0 +1,13 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://bjwdr1jqn4kkd"]
+
+[ext_resource type="PackedScene" uid="uid://dgkm3tenmix56" path="res://celeste/assets/sprites/wall.tscn" id="2_n3nuu"]
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_7aom0"]
+resource_name = "Wall"
+scenes/1/scene = ExtResource("2_n3nuu")
+
+[resource]
+tile_size = Vector2i(32, 32)
+occlusion_layer_0/light_mask = 1
+physics_layer_0/collision_layer = 1
+sources/2 = SubResource("TileSetScenesCollectionSource_7aom0")

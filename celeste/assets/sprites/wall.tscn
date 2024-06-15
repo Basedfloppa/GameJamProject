@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dgkm3tenmix56"]
+
+[ext_resource type="Texture2D" uid="uid://b2cwa6ql5t631" path="res://celeste/assets/sprites/wall.png" id="1_plm3g"]
+
+[sub_resource type="OccluderPolygon2D" id="1"]
+polygon = PackedVector2Array(-16.1457, -16, 16.1457, -16, 16.1457, 16, -16.1457, 16, -16.1457, -0.835808)
+
+[sub_resource type="RectangleShape2D" id="2"]
+size = Vector2(32, 32)
+
+[node name="Wall" type="Sprite2D"]
+texture = ExtResource("1_plm3g")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+scale = Vector2(0.990975, 1)
+occluder = SubResource("1")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("2")
