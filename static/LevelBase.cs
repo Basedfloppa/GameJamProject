@@ -7,6 +7,14 @@ namespace Bd
 {
     public class LevelBase
     {
+        /// <NOTE>
+        /// preferable index structure for lvls
+        /// 0 exit
+        /// 1-5 specials
+        /// 6-n other
+        /// n+1 blank wall
+        /// <NOTE>
+
         public readonly List<MapTile> Lvls = new List<MapTile> 
         {
             new MapTile(
