@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using Classes;
 using System.Linq;
 
@@ -8,7 +7,7 @@ public partial class Game_Lvl : Node
 	public const int TILE_SIZE = 500;
 
 	[Export]
-	Vector2I size;
+	Vector2I size = new Vector2I(5,5);
 
 	Map tilemap;
 	Node2D sprites;

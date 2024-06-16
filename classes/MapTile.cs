@@ -25,7 +25,6 @@ namespace Classes
             entries = _entries;
             rules = _rules;
         }
-
     }
 }
 

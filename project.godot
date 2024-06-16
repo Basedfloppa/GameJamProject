@@ -15,10 +15,6 @@ run/main_scene="res://Game_Lvl.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
-
-LevelBase="*res://static/LevelBase.gd"
-
 [dotnet]
 
 project/assembly_name="GameJamProject"

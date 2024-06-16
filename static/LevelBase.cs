@@ -7,7 +7,7 @@ namespace Bd
 {
     public class LevelBase
     {
-        public readonly List<MapTile> Requiered = new List<MapTile> 
+        public readonly List<MapTile> Lvls = new List<MapTile> 
         {
             new MapTile(
                 _hazards: new List<Utils.Hazards> {},
