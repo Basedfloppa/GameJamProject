@@ -14,6 +14,8 @@ namespace Classes
 		public MapTile[,] map;
 		public List<string> constraints;
 
+		private readonly LevelBase _levelBase = new();
+
 		public Map(Vector2I _size)
 		{
 			size = _size;
@@ -36,7 +38,7 @@ namespace Classes
 			var rng = new Random();
 			int num_x;
 
-			foreach (var i in new LevelBase().Requiered)
+			foreach (var i in _levelBase.Requiered)
 			{
 				switch (i.tileType)
 				{
@@ -71,8 +73,7 @@ namespace Classes
 		internal List<int>[,] get_possible() // gets map of all possible prefabs for map
 		{
 			var result = new List<int>[size.X, size.Y];
-			var _base = new LevelBase();
-			var lvls = _base.Lvls;
+			var lvls = _levelBase.Lvls;
 
 			for (int x = 0; x < size.X; x++)
 			{
@@ -197,7 +198,7 @@ namespace Classes
 			var crd = minimums.Count() > 1 ? minimums[rnd.Next(0, minimums.Count() - 1)] : minimums[0];
 			var rooms = possibilities[crd.X, crd.Y];
 			var room = rooms[rnd.Next(0, rooms.Count() - 1)];
-			map[crd.X, crd.Y] = new LevelBase().Lvls[room];
+			map[crd.X, crd.Y] = _levelBase.Lvls[room];
 		}
 
 		internal bool fully_generated()
