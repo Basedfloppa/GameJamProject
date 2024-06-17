@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2v5tir2s71wk"]
+
+[ext_resource type="Texture2D" uid="uid://251o7hxs4s3c" path="res://prefabs/1x1/Sprite-0001.png" id="1_kslfr"]
+[ext_resource type="TileSet" uid="uid://bjwdr1jqn4kkd" path="res://celeste/assets/sprites/wall.tres" id="2_gqha7"]
+
+[node name="PassageVert" type="Node2D"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 102.0
+offset_bottom = 102.0
+scale = Vector2(5, 5)
+texture = ExtResource("1_kslfr")
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource("2_gqha7")
+format = 2
+layer_0/tile_data = PackedInt32Array(0, 2, 65536, 65536, 2, 65536, 131072, 2, 65536, 196608, 2, 65536, 262144, 2, 65536, 327680, 2, 65536, 393216, 2, 65536, 458752, 2, 65536, 524288, 2, 65536, 589824, 2, 65536, 655360, 2, 65536, 720896, 2, 65536, 786432, 2, 65536, 851968, 2, 65536, 917504, 2, 65536, 983040, 2, 65536, 15, 2, 65536, 65551, 2, 65536, 131087, 2, 65536, 196623, 2, 65536, 262159, 2, 65536, 327695, 2, 65536, 393231, 2, 65536, 458767, 2, 65536, 524303, 2, 65536, 589839, 2, 65536, 655375, 2, 65536, 720911, 2, 65536, 786447, 2, 65536, 851983, 2, 65536, 917519, 2, 65536, 983055, 2, 65536, 524290, 2, 65536, 524291, 2, 65536, 524295, 2, 65536, 524299, 2, 65536, 524300, 2, 65536, 524301, 2, 65536, 524292, 2, 65536, 524296, 2, 65536)

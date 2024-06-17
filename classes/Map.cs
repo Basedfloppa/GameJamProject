@@ -4,7 +4,7 @@ using Utility;
 using Bd;
 using System.Collections.Generic;
 using System.Linq;
-using Bd;
+using System.Threading;
 
 namespace Classes 
 {
@@ -24,6 +24,11 @@ namespace Classes
 		public void generate()
 		{
 			generate_requiered();
+			
+			while(!fully_generated())
+			{
+				Collapse(get_possible());
+			}
 		}
 
 		internal void generate_requiered()
@@ -31,7 +36,7 @@ namespace Classes
 			var rng = new Random();
 			int num_x;
 
-			foreach (var i in new LevelBase().Lvls)
+			foreach (var i in new LevelBase().Requiered)
 			{
 				switch (i.tileType)
 				{
@@ -65,21 +70,26 @@ namespace Classes
 	
 		internal List<int>[,] get_possible() // gets map of all possible prefabs for map
 		{
-			var result = new List<int>[,] {};
-
+			var result = new List<int>[size.X,size.Y];
+			var _base = new LevelBase();
+			var lvls = _base.Lvls;
+			
 			for (int x = 0; x < size.X; x++)
 			{
 				for (int y = 0; y < size.Y; y++)
 				{
-					var base_lvls = new LevelBase().Lvls;
-					foreach (var lvl in base_lvls)
+					result[x,y] = new List<int>();
+
+					foreach (var lvl in lvls)
 					{
 						if (!CanBePlaced(lvl, x, y)) continue; // dont place if cant place
 						if (!AdhearsToRules(lvl)) continue; // dont place too much of smth
 
-						result[x,y].Append(base_lvls.FindIndex(x => x.path == lvl.path));
+						var index = lvls.FindIndex(x => x.path.First() == lvl.path.First());
+						result[x,y].Add(index);
 					}
 				}
+				
 			}
 
 			return result;
@@ -172,7 +182,7 @@ namespace Classes
 			{
 				for (int y = 0; y < size.Y; y++)
 				{
-					if (possibilities[x,y].Count() < min) min = possibilities[x,y].Count; // get global minimum of possible rooms
+					if (possibilities[x,y]?.Count() != 0 && possibilities[x,y]?.Count() < min) min = possibilities[x,y].Count(); // get global minimum of possible rooms
 				}
 			}
 
@@ -180,14 +190,26 @@ namespace Classes
 			{
 				for (int y = 0; y < size.Y; y++)
 				{
-					if (possibilities[x,y].Count() == min) minimums.Append(new Vector2I(x,y)); // get all coordinates with minimum possible rooms
+					if (possibilities[x,y]?.Count() == min) minimums.Add(new Vector2I(x,y)); // get all coordinates with minimum possible rooms
 				}
 			}
 			
-			var crd = minimums[rnd.Next(0,minimums.Count())];
+			var crd = minimums.Count() > 1 ? minimums[rnd.Next(0,minimums.Count()-1)] : minimums[0];
 			var rooms = possibilities[crd.X,crd.Y];
-			var room = rooms[rnd.Next(0,rooms.Count())];
+			var room = rooms[rnd.Next(0,rooms.Count()-1)];
 			map[crd.X,crd.Y] = new LevelBase().Lvls[room];
+		}
+
+		internal bool fully_generated()
+		{
+			for(int x = 0; x < size.X; x++)
+			{
+				for(var y = 0; y < size.Y; y++)
+				{
+					if(map[x,y] == null) return false;
+				}
+			}
+			return true;
 		}
 	}
 }
