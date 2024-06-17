@@ -52,15 +52,7 @@ namespace Classes
 							num_x = rng.Next(1, size.X - 2);
 							var num_y = rng.Next(1, size.Y - 2);
 
-							if (map[num_x, num_y] != null) continue;
-							if (map[num_x + 1, num_y + 1] != null) continue;
-							if (map[num_x + 1, num_y] != null) continue;
-							if (map[num_x, num_y + 1] != null) continue;
-							if (map[num_x - 1, num_y] != null) continue;
-							if (map[num_x, num_y - 1] != null) continue;
-							if (map[num_x - 1, num_y - 1] != null) continue;
-							if (map[num_x + 1, num_y - 1] != null) continue;
-							if (map[num_x - 1, num_y + 1] != null) continue;
+							if (!IsNeighboursEmpty(num_x, num_y)) continue;
 
 							map[num_x, num_y] = i;
 							break;
@@ -68,6 +60,15 @@ namespace Classes
 						break;
 				}
 			}
+		}
+
+		private bool IsNeighboursEmpty(int x, int y)
+		{
+			for (int c = x - 1; c <= x + 1; c++)
+				for (int r = y - 1; r <= y + 1; r++)
+					if (map[c, r] is not null) return false;
+
+			return true;
 		}
 
 		internal List<int>[,] get_possible() // gets map of all possible prefabs for map
