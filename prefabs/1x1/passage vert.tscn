@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d2v5tir2s71wk"]
 
-[ext_resource type="Texture2D" uid="uid://251o7hxs4s3c" path="res://prefabs/1x1/Sprite-0001.png" id="1_kslfr"]
+[ext_resource type="Texture2D" uid="uid://c7toj4c8yv7w0" path="res://prefabs/1x1/Sprite-0001.png" id="1_kslfr"]
 [ext_resource type="TileSet" uid="uid://bjwdr1jqn4kkd" path="res://celeste/assets/sprites/wall.tres" id="2_gqha7"]
 
 [node name="PassageVert" type="Node2D"]

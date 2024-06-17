@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://gr0bat7bsy0n"]
 
-[ext_resource type="Texture2D" uid="uid://bv5romdeua3rs" path="res://prefabs/SPECIAL/Sprite-00021.jpg" id="1_hd2xk"]
+[ext_resource type="Texture2D" uid="uid://t2msm6b4pfcs" path="res://prefabs/SPECIAL/Sprite-00021.jpg" id="1_hd2xk"]
 [ext_resource type="TileSet" uid="uid://bjwdr1jqn4kkd" path="res://celeste/assets/sprites/wall.tres" id="2_j22t7"]
 
 [node name="SPECIAL_2" type="Node2D"]
