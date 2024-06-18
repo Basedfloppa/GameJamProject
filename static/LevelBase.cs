@@ -22,8 +22,8 @@ namespace Bd
 				_path: new List<string>{"res://prefabs/EXIT/exit.tscn"},
 				_type: Utils.TileType.Exit,
 				_size: new Vector2I(1,1),
-				_exits: new List<Vector2I> {new Vector2I(0,-1)},
-				_entries: new List<Vector2I> {new Vector2I(0,-1)},
+				_exits: new List<Vector2I> {new Vector2I(0,1)},
+				_entries: new List<Vector2I> {new Vector2I(0,1)},
 				_rules: new List<string> {"EXIT"}
 			),
 			new MapTile(
@@ -46,15 +46,15 @@ namespace Bd
 			)
 		};
 
-		public readonly List<MapTile> Lvls = new List<MapTile> 
+		public readonly List<MapTile> Lvls = new List<MapTile>
 		{
 			new MapTile(
 				_hazards: new List<Utils.Hazards> {},
 				_path: new List<string>{"res://prefabs/1x1/passage vert.tscn"},
 				_type: Utils.TileType.Passage,
 				_size: new Vector2I(1,1),
-				_exits: new List<Vector2I> {new Vector2I(0,1), new Vector2I(0,-1)},
-				_entries: new List<Vector2I> {new Vector2I(0,1), new Vector2I(0,-1)},
+				_exits: new List<Vector2I> {new Vector2I(0,-1), new Vector2I(0,1)},
+				_entries: new List<Vector2I> {new Vector2I(0,-1), new Vector2I(0,1)},
 				_rules: new List<string>{"PASSAGE"}
 			),
 			new MapTile(
@@ -89,8 +89,8 @@ namespace Bd
 				_path: new List<string>{"res://prefabs/1x1/block up.tscn"},
 				_type: Utils.TileType.Passage,
 				_size: new Vector2I(1,1),
-				_exits: new List<Vector2I> {new Vector2I(0,1)},
-				_entries: new List<Vector2I> {new Vector2I(0,1)},
+				_exits: new List<Vector2I> {new Vector2I(0,-1)},
+				_entries: new List<Vector2I> {new Vector2I(0,-1)},
 				_rules: new List<string>{"PASSAGE"}
 			),
 			new MapTile(
@@ -98,22 +98,13 @@ namespace Bd
 				_path: new List<string>{"res://prefabs/1x1/block down.tscn"},
 				_type: Utils.TileType.Passage,
 				_size: new Vector2I(1,1),
-				_exits: new List<Vector2I> {new Vector2I(0,-1)},
-				_entries: new List<Vector2I> {new Vector2I(0,-1)},
+				_exits: new List<Vector2I> {new Vector2I(0,1)},
+				_entries: new List<Vector2I> {new Vector2I(0,1)},
 				_rules: new List<string>{"PASSAGE"}
 			),
 			new MapTile(
 				_hazards: new List<Utils.Hazards> {},
 				_path: new List<string>{"res://prefabs/1x1/passage left down.tscn"},
-				_type: Utils.TileType.Passage,
-				_size: new Vector2I(1,1),
-				_exits: new List<Vector2I> {new Vector2I(-1,0),new Vector2I(0,-1)},
-				_entries: new List<Vector2I> {new Vector2I(-1,0),new Vector2I(0,-1)},
-				_rules: new List<string>{"PASSAGE"}
-			),
-			new MapTile(
-				_hazards: new List<Utils.Hazards> {},
-				_path: new List<string>{"res://prefabs/1x1/passage left up.tscn"},
 				_type: Utils.TileType.Passage,
 				_size: new Vector2I(1,1),
 				_exits: new List<Vector2I> {new Vector2I(-1,0),new Vector2I(0,1)},
@@ -122,7 +113,25 @@ namespace Bd
 			),
 			new MapTile(
 				_hazards: new List<Utils.Hazards> {},
+				_path: new List<string>{"res://prefabs/1x1/passage left up.tscn"},
+				_type: Utils.TileType.Passage,
+				_size: new Vector2I(1,1),
+				_exits: new List<Vector2I> {new Vector2I(-1,0),new Vector2I(0,-1)},
+				_entries: new List<Vector2I> {new Vector2I(-1,0),new Vector2I(0,-1)},
+				_rules: new List<string>{"PASSAGE"}
+			),
+			new MapTile(
+				_hazards: new List<Utils.Hazards> {},
 				_path: new List<string>{"res://prefabs/1x1/passage right down.tscn"},
+				_type: Utils.TileType.Passage,
+				_size: new Vector2I(1,1),
+				_exits: new List<Vector2I> {new Vector2I(1,0),new Vector2I(0,1)},
+				_entries: new List<Vector2I> {new Vector2I(1,0),new Vector2I(0,1)},
+				_rules: new List<string>{"PASSAGE"}
+			),
+			new MapTile(
+				_hazards: new List<Utils.Hazards> {},
+				_path: new List<string>{"res://prefabs/1x1/passage right up.tscn"},
 				_type: Utils.TileType.Passage,
 				_size: new Vector2I(1,1),
 				_exits: new List<Vector2I> {new Vector2I(1,0),new Vector2I(0,-1)},
@@ -131,12 +140,12 @@ namespace Bd
 			),
 			new MapTile(
 				_hazards: new List<Utils.Hazards> {},
-				_path: new List<string>{"res://prefabs/1x1/passage right up.tscn"},
+				_path: new List<string>{"res://prefabs/BLANK/blank.tscn"},
 				_type: Utils.TileType.Passage,
 				_size: new Vector2I(1,1),
-				_exits: new List<Vector2I> {new Vector2I(1,0),new Vector2I(0,1)},
-				_entries: new List<Vector2I> {new Vector2I(1,0),new Vector2I(0,1)},
-				_rules: new List<string>{"PASSAGE"}
+				_exits: new List<Vector2I> {},
+				_entries: new List<Vector2I> {},
+				_rules: new List<string>{}
 			)
 		};
 	}

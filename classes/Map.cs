@@ -144,28 +144,31 @@ namespace Classes
 				// if room has exit that lvl does not provide entry to
 				if (map[x - 1, y].exits.Contains(new Vector2I(1, 0)) && !lvl.entries.Contains(new Vector2I(-1, 0))) return false;
 			}
+
 			if (x + 1 != size.X && map[x + 1, y] != null) // if we possibly have room to the right
 			{
 				// if room has entry that lvl does not provide exit to
-				if (map[x + 1, y].entries.Contains(new Vector2I(-1, 0)) && !lvl.exits.Contains(new Vector2I(+1, 0))) return false;
+				if (map[x + 1, y].entries.Contains(new Vector2I(-1, 0)) && !lvl.exits.Contains(new Vector2I(1, 0))) return false;
 				// if room has exit that lvl does not provide entry to
-				if (map[x + 1, y].exits.Contains(new Vector2I(-1, 0)) && !lvl.entries.Contains(new Vector2I(+1, 0))) return false;
+				if (map[x + 1, y].exits.Contains(new Vector2I(-1, 0)) && !lvl.entries.Contains(new Vector2I(1, 0))) return false;
 			}
+
 			if (y != 0 && map[x, y - 1] != null) // if we possibly have room to the top
 			{
 				// if room has entry that lvl does not provide exit to
-				if (map[x, y - 1].entries.Contains(new Vector2I(0, -1)) && !lvl.exits.Contains(new Vector2I(0, 1))) return false;
+				if (map[x, y - 1].entries.Contains(new Vector2I(0, 1)) && !lvl.exits.Contains(new Vector2I(0, -1))) return false;
 				// if room has exit that lvl does not provide entry to
-				if (map[x, y - 1].exits.Contains(new Vector2I(0, -1)) && !lvl.entries.Contains(new Vector2I(0, 1))) return false;
+				if (map[x, y - 1].exits.Contains(new Vector2I(0, 1)) && !lvl.entries.Contains(new Vector2I(0, -1))) return false;
 			}
+
 			if (y + 1 != size.Y && map[x, y + 1] != null) // if we possibly have room to the bottom
 			{
 				// if room has entry that lvl does not provide exit to
-				if (map[x, y + 1].entries.Contains(new Vector2I(0, 1)) && !lvl.exits.Contains(new Vector2I(0, -1))) return false;
+				if (map[x, y + 1].entries.Contains(new Vector2I(0, -1)) && !lvl.exits.Contains(new Vector2I(0, 1))) return false;
 				// if room has exit that lvl does not provide entry to
-				if (map[x, y + 1].exits.Contains(new Vector2I(0, 1)) && !lvl.entries.Contains(new Vector2I(0, -1))) return false;
+				if (map[x, y + 1].exits.Contains(new Vector2I(0, -1)) && !lvl.entries.Contains(new Vector2I(0, 1))) return false;
 			}
-
+			
 			return true; // success :D
 		}
 
