@@ -5,6 +5,7 @@ using Bd;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Drawing;
 
 namespace Classes
 {
@@ -137,38 +138,46 @@ namespace Classes
 				}
 			}
 
-			if (x != 0 && map[x - 1, y] != null) // if we possibly have room to the left
+			if (x > 0 && map[x - 1, y] != null) // if we possibly have room to the left
 			{
 				// if room has entry that lvl does not provide exit to
 				if (map[x - 1, y].entries.Contains(new Vector2I(1, 0)) && !lvl.exits.Contains(new Vector2I(-1, 0))) return false;
+				if (!map[x - 1, y].entries.Contains(new Vector2I(1, 0)) && lvl.exits.Contains(new Vector2I(-1, 0))) return false;
 				// if room has exit that lvl does not provide entry to
 				if (map[x - 1, y].exits.Contains(new Vector2I(1, 0)) && !lvl.entries.Contains(new Vector2I(-1, 0))) return false;
+				if (!map[x - 1, y].exits.Contains(new Vector2I(1, 0)) && lvl.entries.Contains(new Vector2I(-1, 0))) return false;
 			}
 
-			if (x + 1 != size.X && map[x + 1, y] != null) // if we possibly have room to the right
+			if (x + 2 <= size.X && map[x + 1, y] != null) // if we possibly have room to the right
 			{
 				// if room has entry that lvl does not provide exit to
 				if (map[x + 1, y].entries.Contains(new Vector2I(-1, 0)) && !lvl.exits.Contains(new Vector2I(1, 0))) return false;
+				if (!map[x + 1, y].entries.Contains(new Vector2I(-1, 0)) && lvl.exits.Contains(new Vector2I(1, 0))) return false;
 				// if room has exit that lvl does not provide entry to
 				if (map[x + 1, y].exits.Contains(new Vector2I(-1, 0)) && !lvl.entries.Contains(new Vector2I(1, 0))) return false;
+				if (!map[x + 1, y].exits.Contains(new Vector2I(-1, 0)) && lvl.entries.Contains(new Vector2I(1, 0))) return false;
 			}
 
-			if (y != 0 && map[x, y - 1] != null) // if we possibly have room to the top
+			if (y < 0 && map[x, y - 1] != null) // if we possibly have room to the top
 			{
 				// if room has entry that lvl does not provide exit to
 				if (map[x, y - 1].entries.Contains(new Vector2I(0, 1)) && !lvl.exits.Contains(new Vector2I(0, -1))) return false;
+				if (!map[x, y - 1].entries.Contains(new Vector2I(0, 1)) && lvl.exits.Contains(new Vector2I(0, -1))) return false;
 				// if room has exit that lvl does not provide entry to
 				if (map[x, y - 1].exits.Contains(new Vector2I(0, 1)) && !lvl.entries.Contains(new Vector2I(0, -1))) return false;
+				if (!map[x, y - 1].exits.Contains(new Vector2I(0, 1)) && lvl.entries.Contains(new Vector2I(0, -1))) return false;
 			}
 
-			if (y + 1 != size.Y && map[x, y + 1] != null) // if we possibly have room to the bottom
+			if (y + 2 <= size.Y && map[x, y + 1] != null) // if we possibly have room to the bottom
 			{
 				// if room has entry that lvl does not provide exit to
 				if (map[x, y + 1].entries.Contains(new Vector2I(0, -1)) && !lvl.exits.Contains(new Vector2I(0, 1))) return false;
+				if (!map[x, y + 1].entries.Contains(new Vector2I(0, -1)) && lvl.exits.Contains(new Vector2I(0, 1))) return false;
 				// if room has exit that lvl does not provide entry to
 				if (map[x, y + 1].exits.Contains(new Vector2I(0, -1)) && !lvl.entries.Contains(new Vector2I(0, 1))) return false;
+				if (!map[x, y + 1].exits.Contains(new Vector2I(0, -1)) && lvl.entries.Contains(new Vector2I(0, 1))) return false;
 			}
-			
+
 			return true; // success :D
 		}
 
@@ -187,7 +196,7 @@ namespace Classes
 			{
 				for (int y = 0; y < size.Y; y++)
 				{
-					if (possibilities[x, y]?.Count() != 0 && possibilities[x, y]?.Count() < min) min = possibilities[x, y].Count(); // get global minimum of possible rooms
+					if (possibilities[x, y]?.Count != 0 && possibilities[x, y]?.Count < min) min = possibilities[x, y].Count; // get global minimum of possible rooms
 				}
 			}
 
@@ -195,13 +204,13 @@ namespace Classes
 			{
 				for (int y = 0; y < size.Y; y++)
 				{
-					if (possibilities[x, y]?.Count() == min) minimums.Add(new Vector2I(x, y)); // get all coordinates with minimum possible rooms
+					if (possibilities[x, y]?.Count == min) minimums.Add(new Vector2I(x, y)); // get all coordinates with minimum possible rooms
 				}
 			}
 
-			var crd = minimums.Count() > 1 ? minimums[rnd.Next(0, minimums.Count() - 1)] : minimums[0];
+			var crd = minimums.Count > 1 ? minimums[rnd.Next(0, minimums.Count - 1)] : minimums[0];
 			var rooms = possibilities[crd.X, crd.Y];
-			var room = rooms[rnd.Next(0, rooms.Count() - 1)];
+			var room = rooms.Count > 1 ? rooms[rnd.Next(0, rooms.Count - 1)] : rooms[0];
 			map[crd.X, crd.Y] = _levelBase.Lvls[room];
 		}
 
