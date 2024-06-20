@@ -1,0 +1,157 @@
+﻿
+Console.WriteLine("Hello, World!");
+
+_ = new Generator();
+
+class Generator
+{
+    const int dimension = 10;
+    int[,] map = new int[dimension, dimension];
+    const int specialRoomCount = 5;
+    const int desiredPathLength = 15;
+
+    readonly Random random = new();
+
+    (int x, int y) entryPoint;
+    (int x, int y) exitPoint;
+    List<(int x, int y)> specialRooms = [];
+
+    public Generator()
+    {
+        Generate();
+        DrawField();
+    }
+
+    void Generate()
+    {
+        PlaceEntryAndExit();
+        PlaceSpecialRooms();
+        if (FindPath([entryPoint]).Count != 0) Console.WriteLine("Success");
+    }
+
+    void PlaceEntryAndExit()
+    {
+        int i = random.Next(dimension);
+        int o = random.Next(dimension);
+
+        entryPoint = (dimension - 1, i);
+        exitPoint = (0, o);
+
+        map[dimension - 1, i] = 1;
+        map[0, o] = 1;
+    }
+
+    void PlaceSpecialRooms()
+    {
+        for (int i = 0; i < specialRoomCount; i++)
+        {
+            int x = random.Next(dimension);
+            int y = random.Next(dimension);
+            if (map[x, y] == 0 && !HasNeighbors(x, y))
+            {
+                map[x, y] = 2;
+                specialRooms.Add((x, y));
+            }
+            else
+            {
+                i--;
+            }
+        }
+    }
+
+    List<(int x, int y)> FindPath(List<(int x, int y)> path)
+    {
+        (int x, int y) previousStep = path.Last();
+        (int x, int y) nextStep = (0, 0);
+        map[previousStep.x, previousStep.y] += 3;
+
+        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(path, new System.Text.Json.JsonSerializerOptions { WriteIndented = true, IncludeFields = true }));
+
+        // if (path.Any(p => p.x == nextStep.x && p.y == nextStep.y)) return false;
+        if (previousStep.x == exitPoint.x && previousStep.y == exitPoint.y)
+        {
+            if (specialRooms.All(p => path.Any(p2 => p2.x == p.x && p2.y == p.y)))
+            {
+                return path;
+            }
+        }
+
+        if (previousStep.x > 0)
+        {
+            nextStep = (previousStep.x - 1, previousStep.y);
+            if (path.Any(p => p.x == nextStep.x && p.y == nextStep.y)) return [];
+            List<(int x, int y)> result = FindPath([.. path, nextStep]);
+            if (result is not []) return result;
+        }
+
+        if (previousStep.x < dimension - 1)
+        {
+            nextStep = (previousStep.x + 1, previousStep.y);
+            if (path.Any(p => p.x == nextStep.x && p.y == nextStep.y)) return [];
+            List<(int x, int y)> result = FindPath([.. path, nextStep]);
+            if (result is not []) return result;
+        }
+
+        if (previousStep.y > 0)
+        {
+            nextStep = (previousStep.x, previousStep.y - 1);
+            if (path.Any(p => p.x == nextStep.x && p.y == nextStep.y)) return [];
+            List<(int x, int y)> result = FindPath([.. path, nextStep]);
+            if (result is not []) return result;
+        }
+
+        if (previousStep.y < dimension - 1)
+        {
+            nextStep = (previousStep.x, previousStep.y + 1);
+            if (path.Any(p => p.x == nextStep.x && p.y == nextStep.y)) return [];
+            List<(int x, int y)> result = FindPath([.. path, nextStep]);
+            if (result is not []) return result;
+        }
+        Console.WriteLine("Failed");
+
+        return [];
+    }
+
+    bool HasNeighbors(int x, int y)
+    {
+        if (x > 0 && map[x - 1, y] != 0) return true;
+        if (x < dimension - 1 && map[x + 1, y] != 0) return true;
+        if (y > 0 && map[x, y - 1] != 0) return true;
+        if (y < dimension - 1 && map[x, y + 1] != 0) return true;
+        return false;
+    }
+
+    static int ShortestDistance((int x1, int y1) p1, (int x2, int y2) p2)
+    {
+        return Math.Abs(p1.x1 - p2.x2) + Math.Abs(p1.y1 - p2.y2);
+    }
+
+    void DrawField()
+    {
+        for (int i = 0; i < dimension; i++)
+        {
+            Line();
+
+            for (int j = 0; j < dimension; j++)
+            {
+                Console.Write("│ ");
+                WriteRed($"{(map[i, j] == 0 ? " " : map[i, j])} ");
+            }
+            Console.WriteLine("│");
+
+        }
+        Line();
+    }
+
+    static void Line()
+    {
+        Console.WriteLine("|" + new string('-', dimension * 4 - 1) + "|");
+    }
+
+    static void WriteRed(string text)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write(text);
+        Console.ResetColor();
+    }
+}
