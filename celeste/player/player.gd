@@ -5,10 +5,10 @@ const LIMIT_SPEED_X = 18000
 const LIMIT_SPEED_Y = 1200
 const JUMP_HEIGHT = 36000
 const MIN_JUMP_HEIGHT = 12000
-const MAX_COYOTE_TIME = 0.1 #amount of seconds
-const JUMP_BUFFER_TIME = 0.17 #amount of seconds
+const MAX_COYOTE_TIME = 0.1 # amount of seconds
+const JUMP_BUFFER_TIME = 0.17 # amount of seconds
 const WALL_JUMP_AMOUNT = 18000
-const WALL_JUMP_TIME = 0.17 #amount of seconds
+const WALL_JUMP_TIME = 0.17 # amount of seconds
 const WALL_SLIDE_FACTOR = 0.8
 const GRAVITY = 2100
 const DASH_SPEED = 36000
@@ -23,19 +23,21 @@ var dashTime = 0
 var spriteColor = "red"
 var canJump = false
 var friction = false
-var wall_sliding = false
+var wallSliding = false
 var trail = false
 var isDashing = false
 var hasDashed = false
 var isGrabbing = false
+var onEdge = false
 
-@onready var rayCast = $Rotatable/RayCast2D
+@onready var wallRayCast = $Rotatable/WallRayCast
 @onready var animation = $AnimationPlayer
+@onready var edgeRayCast = $Rotatable/EdgeRayCast
 
 func _physics_process(delta):
-	axis = Input.get_vector("ui_left", "ui_right","ui_up","ui_down")
+	axis = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 
-	if !isDashing && velocity.y <= LIMIT_SPEED_Y: velocity.y += GRAVITY * delta
+	if !isDashing&&velocity.y <= LIMIT_SPEED_Y: velocity.y += GRAVITY * delta
 
 	#basic movement mechanics and coyote time
 	if is_on_floor():
@@ -58,7 +60,7 @@ func _physics_process(delta):
 	#basic vertical movement mechanics
 	if wallJumpTimer > WALL_JUMP_TIME:
 		wallJumpTimer = WALL_JUMP_AMOUNT
-		if !isDashing && !isGrabbing:
+		if !isDashing&&!isGrabbing:
 			horizontalMovement(delta)
 	else:
 		wallJumpTimer += delta
@@ -66,7 +68,7 @@ func _physics_process(delta):
 	if !canJump:
 		wallSlide(delta)
 
-		if !wall_sliding:
+		if !wallSliding:
 			if velocity.y >= 0:
 				animation.play(str(spriteColor, "Fall"))
 			else:
@@ -75,7 +77,7 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("jump"):
 		if canJump:
 			jump(delta)
-		elif rayCast.is_colliding():
+		elif wallRayCast.is_colliding():
 			wallJump(delta)
 		else:
 			jumpBufferTimer = JUMP_BUFFER_TIME
@@ -83,7 +85,7 @@ func _physics_process(delta):
 		if friction: velocity.x = lerp(velocity.x, 0.0, 0.01)
 	
 	if Input.is_action_just_released("ui_up"):
-		if velocity.y < -MIN_JUMP_HEIGHT * delta:
+		if velocity.y < - MIN_JUMP_HEIGHT * delta:
 			velocity.y = -MIN_JUMP_HEIGHT * delta
 
 	if jumpBufferTimer > 0:
@@ -102,10 +104,11 @@ func wallJump(delta):
 	$Rotatable.scale.x = -$Rotatable.scale.x
 
 func wallSlide(delta: float) -> void:
-	wall_sliding = rayCast.is_colliding()
+	wallSliding = wallRayCast.is_colliding()
+	onEdge = !edgeRayCast.is_colliding()
 	isGrabbing = Input.is_action_pressed("grab")
 
-	if wall_sliding:
+	if wallSliding:
 		if isGrabbing:
 			if axis.y != 0:
 				velocity.y = axis.y * 12000 * delta
@@ -113,25 +116,29 @@ func wallSlide(delta: float) -> void:
 			else:
 				velocity.y = 0
 				animation.play(str(spriteColor, "Wall Slide"))
+			
+			if onEdge:
+				velocity.y = axis.y * 30000 * delta
+
 		else:
 			velocity.y = velocity.y * WALL_SLIDE_FACTOR
-			animation.play(str(spriteColor, "Wall Slide"))		
+			animation.play(str(spriteColor, "Wall Slide"))
 
 func horizontalMovement(delta: float) -> void:
 	var dir: float = axis.x
 
 	if dir != 0:
-		if !is_on_floor() && rayCast.is_colliding(): #allows jumping up on the walls wihtout grabbing, floor check prevents wall sticking
+		if !is_on_floor()&&wallRayCast.is_colliding(): # allows jumping up on the walls wihtout grabbing, floor check prevents wall sticking
 			await get_tree().create_timer(0.1).timeout
-		if canJump: #redundant under impression that if on_floor == can jump, but left alone just in case
+		if canJump: # redundant under impression that if on_floor == can jump, but left alone just in case
 			animation.play(str(spriteColor, "Run"))
 
-		if dir > 0: #if input == "ui_left" 
+		if dir > 0: # if input == "ui_left"
 			velocity.x = min(velocity.x + ACCELERATION * delta, LIMIT_SPEED_X * delta)
-			$Rotatable.scale.x = 1 #rotate character and raycast (mb will swap for custom func and remove redundant node)
-		else: #if input == "ui_right"
+			$Rotatable.scale.x = 1 # rotate character and raycast (mb will swap for custom func and remove redundant node)
+		else: # if input == "ui_right"
 			velocity.x = max(velocity.x - ACCELERATION * delta, -LIMIT_SPEED_X * delta)
-			$Rotatable.scale.x = -1 
+			$Rotatable.scale.x = -1
 	else:
 		velocity.x = lerp(velocity.x, 0.0, 0.5)
 		if canJump: animation.play(str(spriteColor, "Idle"))
@@ -159,14 +166,14 @@ func _on_trailTimer_timeout() -> void:
 	if trail:
 		var trail_sprite = Sprite2D.new()
 
-		trail_sprite.texture = load("res://celeste/assets/sprites/playerSprites.png") #sprite
-		trail_sprite.vframes = 10 #vframes of the spritesheet
-		trail_sprite.hframes = 8 #hframes of the spritesheet
-		trail_sprite.frame = $Rotatable/Sprite2D.frame #current animation frame
-		trail_sprite.scale = Vector2($Rotatable.scale.x * 2.4, $Rotatable.scale.y * 2.4) #set sprite scale to character scale
-		trail_sprite.set_script(load("res://celeste/assets/scripts/trail_fade.gd")) #make trail dessapear over time
-		trail_sprite.position = position #set position to character position
-		trail_sprite.modulate = Color.RED #modulate sprite color
-		trail_sprite.z_index = -1 #set trail behind character
+		trail_sprite.texture = load("res://celeste/assets/sprites/playerSprites.png") # sprite
+		trail_sprite.vframes = 10 # vframes of the spritesheet
+		trail_sprite.hframes = 8 # hframes of the spritesheet
+		trail_sprite.frame = $Rotatable/Sprite.frame # current animation frame
+		trail_sprite.scale = Vector2($Rotatable.scale.x * 2.4, $Rotatable.scale.y * 2.4) # set sprite scale to character scale
+		trail_sprite.set_script(load("res://celeste/assets/scripts/trail_fade.gd")) # make trail dessapear over time
+		trail_sprite.position = position # set position to character position
+		trail_sprite.modulate = Color.RED # modulate sprite color
+		trail_sprite.z_index = -1 # set trail behind character
 
 		get_parent().add_child(trail_sprite)
